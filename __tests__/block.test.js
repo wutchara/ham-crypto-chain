@@ -3,6 +3,8 @@ const { GENESIS_DATA } = require("../config");
 const cryptoHash = require('../crypto-hash');
 
 describe('Block', () => {
+  const nonce = 1;
+  const difficulty = 1;
   const timestamp = 'date';
   const lastHash = 'a';
   const hash = 'b';
@@ -12,6 +14,8 @@ describe('Block', () => {
     lastHash,
     hash,
     data,
+    nonce,
+    difficulty,
   });
 
   test('has a timestamp, lastHash, hash, and data property', () => {
@@ -19,6 +23,8 @@ describe('Block', () => {
     expect(block.lastHash).toEqual(lastHash);
     expect(block.hash).toEqual(hash);
     expect(block.data).toEqual(data);
+    expect(block.nonce).toEqual(nonce);
+    expect(block.difficulty).toEqual(difficulty);
   });
 
   describe('generis function', () => {
@@ -56,7 +62,20 @@ describe('Block', () => {
 
     test('creates a SHA-256 `hash` based on the proper inputs', () => {
       expect(minedBlock.hash)
-      .toEqual(cryptoHash(lastBlock.hash, minedBlock.timestamp, data));
+      .toEqual(cryptoHash(lastBlock.hash,
+        minedBlock.nonce,
+        minedBlock.difficulty,
+        minedBlock.timestamp,
+        data));
+    });
+
+    test('create a SHA-256 `hash` based on the proper inputs', () => {
+      
+    });
+
+    test('sets a `hash` that matches the difficulty criteria', () => {
+      expect(minedBlock.hash.substring(0, minedBlock.difficulty))
+      .toEqual('0'.repeat(minedBlock.difficulty));
     });
   });
 });
